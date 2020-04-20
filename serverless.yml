@@ -1,0 +1,28 @@
+service: todo_backend
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  profile: clos
+  region: eu-west-1
+
+functions:
+  tasks:
+    handler: handler.app # handler - name of file, app = named export
+    events:
+      - http:
+          path: /tasks
+          method: GET
+          cors: true # Cross Origin Resource Sharing
+      - http:
+          path: /tasks/{id} # id is a Path Parameter
+          method: PUT
+          cors: true
+      - http:
+          path: /tasks
+          method: POST
+          cors: true
+      - http:
+          path: /tasks/{id}
+          method: DELETE
+          cors: true
