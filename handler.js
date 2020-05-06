@@ -56,14 +56,13 @@ app.delete("/tasks/:id", function (request, response) {
 }
 */
 
-pp.post("/tasks", function (request, response) {
+app.post("/tasks", function (request, response) {
   const data = request.body;
 
-  // SQL Injection - avoid this by "escaping" user-provided values
-  const query = `INSERT INTO Task (Description, DueDate, Completed, Urgent) VALUES (?, ?, ?, ?)`;
+  const query = `INSERT INTO Task (Narrative, Date, Urgency, Completed, addTask) VALUES (?, ?, ?, ?, ?)`;
   connection.query(
     query,
-    [data.Description, data.DueDate, false, data.Urgent],
+    [data.Narrative, data.Date, data.Urgent, false, false],
     function (err, results) {
       if (err) {
         console.log("Error from MySQL", err);
@@ -72,7 +71,7 @@ pp.post("/tasks", function (request, response) {
         // Send back the newly created task
         // Because the frontend (or whatever client) might want to know the ID
         connection.query(
-          `SELECT * FROM Task WHERE TaskId = ${results.insertId}`,
+          `SELECT * FROM Task WHERE taskId = ${results.insertId}`,
           function (err, results) {
             if (err) {
               console.log("Error from MySQL", err);
