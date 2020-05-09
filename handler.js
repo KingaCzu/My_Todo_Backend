@@ -41,11 +41,15 @@ app.get("/tasks", function (request, response) {
 
 app.delete("/tasks/:id", function (request, response) {
   const id = request.params.id;
-  // Should delete the task with the specified ID from the database
-  // Write a query in SQL
-  // Escape the id that is provided by the user
-  // Send back 200 status if successful
-  response.status(200).send(`Deleted task with ID ${id}!`);
+  const query = "DELETE FROM Task WHERE TaskId = ?";
+  connection.query(query, [id], (err) => {
+    if (err) {
+      console.log("Error from MySQL", err);
+      response.status(500).send(err);
+    } else {
+      response.status(200).send("Task deleted");
+    }
+  });
 });
 
 /*
@@ -63,7 +67,7 @@ app.post("/tasks", function (request, response) {
   const query = `INSERT INTO Task (Narrative, Date, Urgency, Completed, addTask, userID) VALUES (?, ?, ?, ?, ?, ?)`;
   connection.query(
     query,
-    [data.Narrative, data.Date, data.Urgent, false, false, data.userID],
+    [data.Narrative, data.Date, data.Urgency, false, false, data.userID],
     function (err, results) {
       if (err) {
         console.log("Error from MySQL", err);
@@ -89,13 +93,17 @@ app.post("/tasks", function (request, response) {
 
 app.put("/tasks/:id", function (request, response) {
   const id = request.params.id;
-  const data = request.body;
-  // Write an SQL query to update the fields provided in the request for the task WHERE TaskId = id
-  // Remember to escape user-provided values
-  // Send back 200 (not the updated task)
-  response
-    .status(200)
-    .send(`Updated task with ID ${id} and data ${JSON.stringify(data)}`);
+  const data = request.body;// { Urgent: true, Completed: false }
+  const query = "UPDATE Task SET ? WHERE TaskID = ?";
+  connection.query(query, [data, id], (err) => {
+    if (err) {
+      console.log("Error from MySQL", err);
+      response.status(500).send(err);
+    } else {
+      response.status(200).send("Updated Task");
+    }
+  });
 });
+
 
 module.exports.app = serverlessHttp(app);
