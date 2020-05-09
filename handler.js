@@ -50,16 +50,17 @@ app.delete("/tasks/:id", function (request, response) {
 
 /*
 {
-	"Description": "Wash the dog",
+	"Narrative": "Wash the dog",
 	"DueDate": "2020-04-24",
-	"Urgent": true
+  "Urgent": true
+  Completed: true
+  AddTask: false
 }
 */
 
 app.post("/tasks", function (request, response) {
   const data = request.body;
-
-  const query = `INSERT INTO Task (Narrative, Date, Urgency, Completed, addTask) VALUES (?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO Task (Narrative, Date, Urgency, Completed, addTask, userID) VALUES (?, ?, ?, ?, ?, 1)`;
   connection.query(
     query,
     [data.Narrative, data.Date, data.Urgent, false, false],
