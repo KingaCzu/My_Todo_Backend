@@ -32,7 +32,7 @@ app.get("/tasks", function (request, response) {
 
 app.delete("/tasks/:id", function (request, response) {
   const id = request.params.id;
-  const query = "DELETE FROM Task WHERE TaskId = ?";
+  const query = "DELETE FROM Task WHERE taskID = ?";
   connection.query(query, [id], (err) => {
     if (err) {
       console.log("Error from MySQL", err);
@@ -45,27 +45,27 @@ app.delete("/tasks/:id", function (request, response) {
 
 /*
 {
-	"Narrative": "Wash the dog",
-	"DueDate": "2020-04-24",
-  "Urgent": true
-  Completed: true
+	"narrative": "Wash the dog",
+	"nate": "2020-04-24",
+  "urgency": true
+  completed: true
   AddTask: false
 }
 */
 
 app.post("/tasks", function (request, response) {
   const data = request.body;
-  const query = `INSERT INTO Task (Narrative, Date, Urgency, Completed, addTask, userID) VALUES (?, ?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO Task (narrative, date, urgency, completed, addTask, userID) VALUES (?, ?, ?, ?, ?, ?)`;
   connection.query(
     query,
-    [data.Narrative, data.Date, data.Urgency, false, false, data.userID],
+    [data.narrative, data.date, data.urgency, false, false, data.userID],
     function (err, results) {
       if (err) {
         console.log("Error from MySQL", err);
         response.status(500).send(err);
       } else {
          connection.query(
-          `SELECT * FROM Task WHERE taskId = ${results.insertId}`,
+          `SELECT * FROM Task WHERE taskID = ${results.insertId}`,
           function (err, results) {
             if (err) {
               console.log("Error from MySQL", err);
@@ -82,8 +82,8 @@ app.post("/tasks", function (request, response) {
 
 app.put("/tasks/:id", function (request, response) {
   const id = request.params.id;
-  const data = request.body;// { Urgent: true, Completed: false }
-  const query = "UPDATE Task SET ? WHERE TaskID = ?";
+  const data = request.body;// { urgency: true, completed: false }
+  const query = "UPDATE Task SET ? WHERE taskID = ?";
   connection.query(query, [data, id], (err) => {
     if (err) {
       console.log("Error from MySQL", err);
