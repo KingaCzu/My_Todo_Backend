@@ -1,6 +1,3 @@
-// import express from "express";
-// React apps get Transpiled
-// This version of NodeJS does support import statements and there is no transpilation step
 
 const serverlessHttp = require("serverless-http");
 const express = require("express");
@@ -16,19 +13,13 @@ const connection = mysql.createConnection({
 });
 
 
-// Logically separate 4 sections of code according to the method of the HTTP request received
-
-// Export a single function, called app
-
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// https://fjr832ry.api-gateway.aws.com/tasks (backend URL example)
-// https://harrietty.github.com/todos_frontend (frontend URL example)
+
 
 app.get("/tasks", function (request, response) {
-  // Should make a SELECT * FROM Tasks query to the DB and return the results
   connection.query("SELECT * FROM Task", function (err, data) {
     if (err) {
       console.log("Error from MySQL", err);
@@ -73,9 +64,7 @@ app.post("/tasks", function (request, response) {
         console.log("Error from MySQL", err);
         response.status(500).send(err);
       } else {
-        // Send back the newly created task
-        // Because the frontend (or whatever client) might want to know the ID
-        connection.query(
+         connection.query(
           `SELECT * FROM Task WHERE taskId = ${results.insertId}`,
           function (err, results) {
             if (err) {
