@@ -55,10 +55,10 @@ app.delete("/tasks/:id", function (request, response) {
 
 app.post("/tasks", function (request, response) {
   const data = request.body;
-  const query = `INSERT INTO Task (narrative, date, urgency, completed, addTask, userID) VALUES (?, ?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO Task (narrative, date, urgency, completed, addTask) VALUES (?, ?, ?, ?, ?)`;
   connection.query(
     query,
-    [data.narrative, data.date, data.urgency, false, false, data.userID],
+    [data.narrative, data.date, data.urgency, false, false],
     function (err, results) {
       if (err) {
         console.log("Error from MySQL", err);
