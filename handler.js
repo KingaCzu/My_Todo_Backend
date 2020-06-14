@@ -1,15 +1,15 @@
 
-const serverlessHttp = require("serverless-http");
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const mysql = require("mysql");
+const serverlessHttp = require('serverless-http');
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const mysql = require('mysql');
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: "Tasks"
+  database: 'Tasks',
 });
 
 
@@ -30,15 +30,15 @@ app.get("/tasks", function (request, response) {
   });
 });
 
-app.delete("/tasks/:id", function (request, response) {
+app.delete('/tasks/:id', function (request, response) {
   const id = request.params.id;
-  const query = "DELETE FROM Task WHERE taskID = ?";
+  const query = 'DELETE FROM Task WHERE taskID = ?';
   connection.query(query, [id], (err) => {
     if (err) {
-      console.log("Error from MySQL", err);
+      console.log('Error from MySQL', err);
       response.status(500).send(err);
     } else {
-      response.status(200).send("Task deleted");
+      response.status(200).send('Task deleted');
     }
   });
 });
@@ -55,16 +55,16 @@ app.delete("/tasks/:id", function (request, response) {
 
 app.post("/tasks", function (request, response) {
   const data = request.body;
-  const query = `INSERT INTO Task (narrative, date, urgency, completed, addTask) VALUES (?, ?, ?, ?, ?)`;
+  const query = `INSERT INTO Task (narrative, date, urgency, completed, addTask, userID) VALUES (?, ?, ?, ?, ?, ?)`;
   connection.query(
     query,
-    [data.narrative, data.date, data.urgency, false, false],
+    [data.narrative, data.date, data.urgency, false, false, data.userID],
     function (err, results) {
       if (err) {
         console.log("Error from MySQL", err);
         response.status(500).send(err);
       } else {
-         connection.query(
+        connection.query(
           `SELECT * FROM Task WHERE taskID = ${results.insertId}`,
           function (err, results) {
             if (err) {
